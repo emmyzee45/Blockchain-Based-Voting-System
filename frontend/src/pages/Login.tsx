@@ -29,6 +29,7 @@ const Login = (props: RouteProps): JSX.Element => {
             }}
             validationSchema={schema}
             onSubmit={(values) => {
+              console.log(values)
               axios
                 .post("/auth/login", { ...values })
                 .then((res) => {
@@ -36,6 +37,7 @@ const Login = (props: RouteProps): JSX.Element => {
                 })
                 .catch((err) => {
                   let error = err.message;
+                  console.log(error)
                   if (err?.response?.data)
                     error = JSON.stringify(err.response.data);
                   setError(error);

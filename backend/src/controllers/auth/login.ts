@@ -5,6 +5,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dayjs from "dayjs";
 
+// Type definition for the request body
+interface RequestBody {
+  email: string;
+  password: string;
+}
+
 const schema = yup.object({
   body: yup.object({
     email: yup.string().email().required(),
@@ -14,21 +20,21 @@ const schema = yup.object({
 
 export default async (req: Request, res: Response) => {
   let user = null;
+  const {email, password} = req.body;
 
   // throws error when the POST-ed queries are invalide (email and password)
   try {
-    await schema.validate(req);
+    await schema.validate({body: req.body});
   } catch (error: any) {
     return res.status(400).send(error.errors);
   }
 
   // throws error if user with provided email not found
   try {
-    user = await User.findOneOrFail({ email: req.body.email });
+    user = await User.findOneOrFail({ where: { email }});
   } catch (error: any) {
     return res.status(404).send(error);
   }
-
   if (!user.verified) return res.status(400).send("Not verified");
 
   const match = await bcrypt.compare(req.body.password, user.password);

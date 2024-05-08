@@ -1,10 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { DeepPartial, MigrationInterface, QueryRunner } from "typeorm";
 import { User } from "../entity/User";
 import usersData from "../seed/users";
 
 export class users1645187823173 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const users = User.create(usersData);
+
+    const users = usersData as DeepPartial<User>[];
     await User.save(users);
   }
 

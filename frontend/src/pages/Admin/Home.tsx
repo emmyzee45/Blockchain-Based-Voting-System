@@ -16,6 +16,7 @@ const Home = (props: RouteProps): JSX.Element => {
     axios
       .get("/polls/status")
       .then((res) => {
+        console.log(res.data)
         setStatus(res.data.status);
         setLoading(false);
       })
